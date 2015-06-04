@@ -1,0 +1,16 @@
+{
+    ":addons": [
+        "Db",
+        "SourcesOptions"
+    ],
+    ":analyses": [],
+    ":joins": [],
+    ":options": {
+        "modules_metrics": true,
+        "months-to-extract":":both",
+        "num-months-to-extract":"12",
+        ":mongo": {
+            ":database": "developers_activity"
+        }
+    }
+}
