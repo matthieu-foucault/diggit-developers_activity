@@ -1,14 +1,22 @@
 {
     ":addons": [
         "Db",
-        "SourcesOptions"
+        "SourcesOptions",
+        "RWrapper"
     ],
-    ":analyses": [],
-    ":joins": [],
+    ":analyses": [
+        "Diggit::DevelopersActivity::Analyses::ProjectDevelopersAnalysis",
+        "Diggit::DevelopersActivity::Analyses::ModuleMetricsAnalysis",
+        "Diggit::DevelopersActivity::Analyses::MonthsActivityAnalysis",
+        "Diggit::DevelopersActivity::Analyses::ReleasesActivityAnalysis"
+    ],
+    ":joins": [
+        "Diggit::DevelopersActivity::Analyses::DeveloperTurnoverJoin"
+    ],
     ":options": {
         "modules_metrics": true,
-        "months-to-extract":":both",
-        "num-months-to-extract":"12",
+        "months-to-extract": ":both",
+        "num-months-to-extract": "12",
         ":mongo": {
             ":database": "developers_activity"
         }

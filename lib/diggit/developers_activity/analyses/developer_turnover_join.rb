@@ -5,7 +5,7 @@ require 'fileutils'
 module Diggit
 	module DevelopersActivity
 		module Analyses
-			class DeveloperTurnoverJoin < Diggit::Join
+			class DeveloperTurnoverJoin < Join
 				WORKING_DIR = './turnover/working_dir'
 				WEB_WORKING_DIR = './turnover/web_working_dir'
 				def run
