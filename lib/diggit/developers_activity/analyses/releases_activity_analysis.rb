@@ -8,7 +8,7 @@ module Diggit
 			#
 			# @since 0.0.1
 			class ReleasesActivityAnalysis < ActivityAnalysis
-				COL_DEVELOPERS_RELEASE_ACTIVITY ||= "developers_release_activity"
+				COL_DEVELOPERS_RELEASE_ACTIVITY ||= "developer_activity_release"
 
 				def commits_between(new_commit, old_commit)
 					walker = Rugged::Walker.new(@repo)

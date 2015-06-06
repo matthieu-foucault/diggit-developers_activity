@@ -50,11 +50,11 @@ module Diggit
 						diff.each do |patch|
 							next unless patch.delta.renamed?
 							if walk_backwards
-								renamed_path = patch.delta.new_file[:path]
-								new_path = patch.delta.old_file[:path]
-							else
 								new_path = patch.delta.new_file[:path]
 								renamed_path = patch.delta.old_file[:path]
+							else
+								renamed_path = patch.delta.new_file[:path]
+								new_path = patch.delta.old_file[:path]
 							end
 							add(renamed_path, new_path)
 						end
