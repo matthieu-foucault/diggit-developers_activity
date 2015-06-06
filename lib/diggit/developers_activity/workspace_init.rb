@@ -27,6 +27,7 @@ module Diggit
 
 				analyses_dir = File.expand_path('analyses', File.dirname(__FILE__))
 				home = File.expand_path(INCLUDES_FOLDER, File.expand_path(DIGGIT_FOLDER, Dir.home))
+				FileUtils.mkdir_p(home)
 				FileUtils.ln_s(analyses_dir, File.expand_path('developers_activity', home))
 			end
 		end

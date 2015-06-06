@@ -5,6 +5,7 @@
         "RWrapper"
     ],
     ":analyses": [
+        "ClocPerFileAnalysis",
         "Diggit::DevelopersActivity::Analyses::ProjectDevelopersAnalysis",
         "Diggit::DevelopersActivity::Analyses::ModuleMetricsAnalysis",
         "Diggit::DevelopersActivity::Analyses::MonthsActivityAnalysis",
