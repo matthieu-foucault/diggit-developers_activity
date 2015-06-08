@@ -35,8 +35,6 @@ module Diggit
 					end
 				end
 
-				puts "num commits #{num_commits}"
-
 				fist_commit_date = commits[0].author[:time]
 
 				# compute metrics and write to result

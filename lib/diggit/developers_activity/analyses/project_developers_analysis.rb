@@ -11,6 +11,7 @@ module Diggit
 			class ProjectDevelopersAnalysis < ActivityAnalysis
 				COL ||= "devs_commit_dates"
 				def run
+					puts('Extracting project-level activity')
 					r_last = @repo.lookup(source_options["R_last"])
 					r_first_time = @repo.lookup(source_options["R_first"]).author[:time]
 

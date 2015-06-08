@@ -27,6 +27,7 @@ module Diggit
 				end
 
 				def run
+					puts('Extract releases activity')
 					releases = source_options["releases"]
 					(0..(releases.length - 2)).each do |i|
 						release_commits = commits_between(releases[i], releases[i + 1])

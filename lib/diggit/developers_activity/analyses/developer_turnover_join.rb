@@ -17,17 +17,20 @@ module Diggit
 					puts('Running R sript...')
 
 					@addons[:R].eval <<-EOS
+						options(warn=-1)
 						if (require(developerTurnover) == FALSE) {
 							if (require(devtools) == FALSE) {
-								install.packages("devtools")
+								install.packages("devtools", repos = "http://cran.rstudio.com")
 								library(devtools)
 							}
 							install_github("matthieu-foucault/RdeveloperTurnover")
 							library(devtools)
+							library(developerTurnover)
 						}
 
 						developer_turnover(database_host, working_dir, web_working_dir)
 						print("R script finished")
+						options(warn=0)
 					EOS
 				end
 

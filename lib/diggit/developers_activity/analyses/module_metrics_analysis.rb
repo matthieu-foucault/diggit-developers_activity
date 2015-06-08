@@ -13,6 +13,7 @@ module Diggit
 				MODULES_METRICS_COL ||= "modules_metrics"
 
 				def run
+					puts('Extracting LoC and #BugFixes')
 					metrics = ModuleMetricsExtractor.extract_module_metrics(@source, source_options, @addons[:db], @repo)
 					@addons[:db].db[MODULES_METRICS_COL].insert(metrics)
 				end

@@ -32,6 +32,8 @@ module Diggit
 				end
 
 				def extract_months_before
+					print("Extracting monthly activity (before S_0)")
+					STDOUT.flush
 					Renames.clear
 					r_0 = @repo.lookup(source_options["cloc-commit-id"])
 					t_first = @repo.lookup(source_options["R_first"]).author[:time]
@@ -50,7 +52,8 @@ module Diggit
 						Renames.extract_commit_renames(commit, true)
 						commits << commit if commit.parents.size == 1
 						if t < t_previous_month || t < t_first
-							puts "Month #{month_num}, #{commits.size} commits"
+							print('.')
+							STDOUT.flush
 							m = extract_developers_activity(@source, commits, month_num)
 							@addons[:db].db[MONTHS_BEFORE_COL].insert(m) unless m.empty?
 							month_num += 1
@@ -59,9 +62,13 @@ module Diggit
 						end
 						break if t < t_first || month_num > @num_months_to_extract
 					end
+					print("\n")
+					STDOUT.flush
 				end
 
 				def extract_months_after
+					print("Extracting monthly activity (after S_0) ")
+					STDOUT.flush
 					Renames.clear
 					r_0 = @repo.lookup(source_options["cloc-commit-id"])
 					r_last = @repo.lookup(source_options["R_last"])
@@ -79,7 +86,8 @@ module Diggit
 						Renames.extract_commit_renames(commit, false)
 						commits << commit if commit.parents.size == 1
 						if t > t_next_month
-							puts "Month #{month_num}, #{commits.size} commits"
+							print('.')
+							STDOUT.flush
 							m = ActivityExtractor.extract_developers_activity(@source, commits, month_num)
 							@addons[:db].db[MONTHS_AFTER_COL].insert(m) unless m.empty?
 							month_num += 1
@@ -88,6 +96,8 @@ module Diggit
 						end
 						break if month_num > @num_months_to_extract
 					end
+					print("\n")
+					STDOUT.flush
 				end
 			end
 		end
