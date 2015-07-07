@@ -13,13 +13,14 @@ module Diggit
 				MODULES_METRICS_COL ||= "modules_metrics"
 
 				def run
+					super
 					puts('Extracting LoC and #BugFixes')
-					metrics = ModuleMetricsExtractor.extract_module_metrics(@source, source_options, @addons[:db], @repo)
-					@addons[:db].db[MODULES_METRICS_COL].insert(metrics)
+					metrics = ModuleMetricsExtractor.extract_module_metrics(@source, src_opt[@source], db, repo)
+					db.insert(MODULES_METRICS_COL, metrics)
 				end
 
 				def clean
-					@addons[:db].db[MODULES_METRICS_COL].remove({ project: @source })
+					db.client[MODULES_METRICS_COL].find({ project: @source.url }).delete_many
 				end
 			end
 		end

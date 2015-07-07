@@ -12,13 +12,17 @@ module Diggit
 				MODULES_REGEXP = "modules"
 				FILE_FILTER = "file-filter"
 
-				def read_options(source, source_options, db)
+				def read_options(source, src_opt, db)
 					@source = source
 					@db = db
 					@release_files = files_from_cloc_analysis
-					@modules_regexp = source_options.key?(MODULES_REGEXP) ? source_options[MODULES_REGEXP].map { |m| Regexp.new m } : []
-					@file_filter = Regexp.new source_options[FILE_FILTER]
+					@modules_regexp = src_opt.key?(MODULES_REGEXP) ? src_opt[MODULES_REGEXP].map { |m| Regexp.new m } : []
+					@file_filter = Regexp.new src_opt[FILE_FILTER]
 					@file_filter ||= //
+				end
+
+				def files_as_modules
+					@modules_regexp = []
 				end
 
 				def ignore_file?(path)
@@ -43,9 +47,10 @@ module Diggit
 
 				def files_from_cloc_analysis
 					release_files = Set.new
-					cloc_source = @db.db['cloc-file'].find_one({ source: @source })
-					cloc_source["cloc"].each do |cloc_file|
-						release_files << cloc_file["path"]
+					@db['cloc-file'].find({ source: @source.url }).each do |cloc_source|
+						cloc_source["cloc"].each do |cloc_file|
+							release_files << cloc_file["path"]
+						end
 					end
 					release_files
 				end

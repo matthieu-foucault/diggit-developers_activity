@@ -11,11 +11,11 @@ module Diggit
 				COL_DEVELOPERS_RELEASE_ACTIVITY ||= "developer_activity_release"
 
 				def commits_between(new_commit, old_commit)
-					walker = Rugged::Walker.new(@repo)
+					walker = Rugged::Walker.new(repo)
 					walker.sorting(Rugged::SORT_DATE)
-					walker.push(@repo.lookup(new_commit))
+					walker.push(repo.lookup(new_commit))
 
-					t_old = @repo.lookup(old_commit).author[:time]
+					t_old = repo.lookup(old_commit).author[:time]
 					commits = []
 
 					walker.each do |commit|
@@ -27,18 +27,19 @@ module Diggit
 				end
 
 				def run
+					super
 					puts('Extract releases activity')
-					releases = source_options["releases"]
+					releases = src_opt[@source]["releases"]
 					(0..(releases.length - 2)).each do |i|
 						release_commits = commits_between(releases[i], releases[i + 1])
 						release_commits.each { |commit| Renames.extract_commit_renames(commit) }
 						m = extract_developers_activity(@source, release_commits, i)
-						@addons[:db].db[COL_DEVELOPERS_RELEASE_ACTIVITY].insert(m) unless m.empty?
+						db.insert(COL_DEVELOPERS_RELEASE_ACTIVITY, m) unless m.empty?
 					end
 				end
 
 				def clean
-					@addons[:db].db[COL_DEVELOPERS_RELEASE_ACTIVITY].remove({ project: @source })
+					db.client[COL_DEVELOPERS_RELEASE_ACTIVITY].find({ project: @source.url }).delete_many
 				end
 			end
 		end

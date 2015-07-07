@@ -5,18 +5,23 @@ require 'fileutils'
 module Diggit
 	module DevelopersActivity
 		module Analyses
-			class DeveloperTurnoverJoin < Join
-				WORKING_DIR = './turnover/working_dir'
-				WEB_WORKING_DIR = './turnover/web_working_dir'
+			class DeveloperTurnoverJoin < Diggit::Join
+				require_addons 'r'
+				require_analyses('module_metrics_analysis', 'months_activity_analysis',
+				                 'project_developers_analysis', 'releases_activity_analysis')
+				WORKING_DIR = './turnover/results/'
+				WEB_WORKING_DIR = './turnover/web_page_results/'
 				def run
-					@addons[:R].database_host = '127.0.0.1'
-					@addons[:R].working_dir = WORKING_DIR
+					db_match = @options[:mongo][:url].match(%r{^mongodb://(.+):27017/(.+)$})
+					r.database_host = db_match[1]
+					r.database_name = db_match[2]
+					r.working_dir = WORKING_DIR
 					FileUtils.mkdir_p(WORKING_DIR)
-					@addons[:R].web_working_dir = WEB_WORKING_DIR
+					r.web_working_dir = WEB_WORKING_DIR
 					FileUtils.mkdir_p(WEB_WORKING_DIR)
 					puts('Running R sript...')
 
-					@addons[:R].eval <<-EOS
+					r.eval <<-EOS
 						options(warn=-1)
 						if (require(developerTurnover) == FALSE) {
 							if (require(devtools) == FALSE) {
@@ -28,7 +33,7 @@ module Diggit
 							library(developerTurnover)
 						}
 
-						developer_turnover(database_host, working_dir, web_working_dir)
+						developer_turnover(database_host, database_name, working_dir, web_working_dir)
 						print("R script finished")
 						options(warn=0)
 					EOS

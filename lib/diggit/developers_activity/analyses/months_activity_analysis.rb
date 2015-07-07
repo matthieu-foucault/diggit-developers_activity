@@ -22,25 +22,26 @@ module Diggit
 				end
 
 				def run
+					super
 					extract_months_before unless @months_to_extract == :after
 					extract_months_after unless @months_to_extract == :before
 				end
 
 				def clean
-					@addons[:db].db[MONTHS_BEFORE_COL].remove({ project: @source }) unless @months_to_extract == :after
-					@addons[:db].db[MONTHS_AFTER_COL].remove({ project: @source }) unless @months_to_extract == :before
+					db.client[MONTHS_BEFORE_COL].find({ project: @source.url }).delete_many unless @months_to_extract == :after
+					db.client[MONTHS_AFTER_COL].find({ project: @source.url }).delete_many unless @months_to_extract == :before
 				end
 
 				def extract_months_before
 					print("Extracting monthly activity (before S_0)")
 					STDOUT.flush
 					Renames.clear
-					r_0 = @repo.lookup(source_options["cloc-commit-id"])
-					t_first = @repo.lookup(source_options["R_first"]).author[:time]
+					r_0 = repo.lookup(src_opt[@source]["cloc-commit-id"])
+					t_first = repo.lookup(src_opt[@source]["R_first"]).author[:time]
 
 					t_0 = r_0.author[:time]
 
-					walker = Rugged::Walker.new(@repo)
+					walker = Rugged::Walker.new(repo)
 					walker.sorting(Rugged::SORT_DATE)
 					walker.push(r_0)
 
@@ -55,7 +56,7 @@ module Diggit
 							print('.')
 							STDOUT.flush
 							m = extract_developers_activity(@source, commits, month_num)
-							@addons[:db].db[MONTHS_BEFORE_COL].insert(m) unless m.empty?
+							db.insert(MONTHS_BEFORE_COL, m) unless m.empty?
 							month_num += 1
 							t_previous_month -= MONTH_SECONDS
 							commits = []
@@ -70,11 +71,11 @@ module Diggit
 					print("Extracting monthly activity (after S_0) ")
 					STDOUT.flush
 					Renames.clear
-					r_0 = @repo.lookup(source_options["cloc-commit-id"])
-					r_last = @repo.lookup(source_options["R_last"])
+					r_0 = repo.lookup(src_opt[@source]["cloc-commit-id"])
+					r_last = repo.lookup(src_opt[@source]["R_last"])
 					t_0 = r_0.author[:time]
 
-					walker = Rugged::Walker.new(@repo)
+					walker = Rugged::Walker.new(repo)
 					walker.sorting(Rugged::SORT_DATE | Rugged::SORT_REVERSE)
 					walker.push(r_last)
 					t_next_month = t_0 + MONTH_SECONDS
@@ -89,7 +90,7 @@ module Diggit
 							print('.')
 							STDOUT.flush
 							m = ActivityExtractor.extract_developers_activity(@source, commits, month_num)
-							@addons[:db].db[MONTHS_AFTER_COL].insert(m) unless m.empty?
+							db.insert(MONTHS_AFTER_COL, m) unless m.empty?
 							month_num += 1
 							t_next_month += MONTH_SECONDS
 							commits = []

@@ -1,0 +1,8 @@
+{
+    "modules_metrics": true,
+    "months-to-extract": ":both",
+    "num-months-to-extract": "12",
+    ":mongo": {
+        ":url": "mongodb://localhost:27017/developers_activity"
+    }
+}

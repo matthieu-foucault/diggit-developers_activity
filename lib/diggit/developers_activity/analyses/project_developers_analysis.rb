@@ -11,11 +11,12 @@ module Diggit
 			class ProjectDevelopersAnalysis < ActivityAnalysis
 				COL ||= "devs_commit_dates"
 				def run
+					super
 					puts('Extracting project-level activity')
-					r_last = @repo.lookup(source_options["R_last"])
-					r_first_time = @repo.lookup(source_options["R_first"]).author[:time]
+					r_last = repo.lookup(src_opt[@source]["R_last"])
+					r_first_time = repo.lookup(src_opt[@source]["R_first"]).author[:time]
 
-					walker = Rugged::Walker.new(@repo)
+					walker = Rugged::Walker.new(repo)
 					walker.sorting(Rugged::SORT_DATE)
 					walker.push(r_last)
 
@@ -23,16 +24,16 @@ module Diggit
 					walker.each do |commit|
 						t = commit.author[:time]
 						author = Authors.get_author(commit)
-						devs << { project: @source, author: author, time: t }
+						devs << { project: @source.url, author: author, time: t }
 
 						break if t < r_first_time
 					end
 
-					@addons[:db].db[COL].insert(devs)
+					db.insert(COL, devs)
 				end
 
 				def clean
-					@addons[:db].db[COL].remove({ project: @source })
+					db.client[COL].find({ project: @source.url }).delete_many
 				end
 			end
 		end

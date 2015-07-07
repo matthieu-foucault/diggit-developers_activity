@@ -17,7 +17,7 @@ module Diggit
 
 				modules_metrics = []
 				modules_loc.each do |maudule, loc|
-					modules_metrics << { project: source, 'module' => maudule, 'LoC' => loc,
+					modules_metrics << { project: source.url, 'module' => maudule, 'LoC' => loc,
 														   'BugFixes' => modules_bugfixes[maudule].size }
 				end
 				modules_metrics
@@ -40,10 +40,11 @@ module Diggit
 
 			def extract_loc(source, db)
 				modules_loc = Hash.new(0)
-				cloc_source = db.db['cloc-file'].find_one({ source: source })
-				cloc_source['cloc'].each do |cloc_file|
-					maudule = ActivityExtractor::Modules.get_module(cloc_file['path'])
-					modules_loc[maudule] = modules_loc[maudule] + cloc_file['code'] unless maudule.nil?
+				db.client['cloc-file'].find({ source: source.url }).each do |cloc_source|
+					cloc_source['cloc'].each do |cloc_file|
+						maudule = ActivityExtractor::Modules.get_module(cloc_file['path'])
+						modules_loc[maudule] = modules_loc[maudule] + cloc_file['code'] unless maudule.nil?
+					end
 				end
 				modules_loc
 			end

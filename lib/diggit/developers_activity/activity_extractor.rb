@@ -4,6 +4,7 @@ require 'diggit/developers_activity/activity_extractor/renames'
 require 'diggit/developers_activity/activity_extractor/modules'
 require 'diggit/developers_activity/activity_extractor/authors'
 require 'diggit/developers_activity'
+require 'set'
 
 module Diggit
 	module DevelopersActivity
@@ -35,13 +36,13 @@ module Diggit
 					end
 				end
 
-				fist_commit_date = commits[0].author[:time]
+				first_commit_date = commits[0].author[:time]
 
 				# compute metrics and write to result
 				developer_metrics = []
 				contributions.each do |key, value|
-					developer_metrics << { project: source, developer: key[:author], 'module' => key['module'],
-						touches: value[:touches], churn: value[:churn], releaseDate: fist_commit_date,
+					developer_metrics << { project: source.url, developer: key[:author], 'module' => key['module'],
+						touches: value[:touches], churn: value[:churn], releaseDate: first_commit_date,
 						commits_group_id: commits_group_id }
 				end
 				developer_metrics
