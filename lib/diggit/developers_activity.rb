@@ -1,8 +1,3 @@
-require "diggit/developers_activity/version"
-require "diggit/developers_activity/activity_extractor"
-require "diggit/developers_activity/module_metrics_extractor"
-require "diggit/developers_activity/analyses"
-require "diggit/developers_activity/workspace_init"
 
 module Diggit
 	module DevelopersActivity
