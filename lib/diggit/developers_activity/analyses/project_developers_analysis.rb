@@ -17,11 +17,10 @@ module Diggit
 					r_first_time = repo.lookup(src_opt[@source]["R_first"]).author[:time]
 
 					walker = Rugged::Walker.new(repo)
-					walker.sorting(Rugged::SORT_DATE)
 					walker.push(r_last)
 
 					devs = []
-					walker.each do |commit|
+					walker.sort_by { |c| c.author[:time] }.reverse_each do |commit|
 						t = commit.author[:time]
 						author = Authors.get_author(commit)
 						devs << { project: @source.url, author: author, time: t }

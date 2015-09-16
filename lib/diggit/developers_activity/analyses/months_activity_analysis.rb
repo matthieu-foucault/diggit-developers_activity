@@ -42,13 +42,12 @@ module Diggit
 					t_0 = r_0.author[:time]
 
 					walker = Rugged::Walker.new(repo)
-					walker.sorting(Rugged::SORT_DATE)
 					walker.push(r_0)
 
 					t_previous_month = t_0 - MONTH_SECONDS
 					month_num = 1
 					commits = []
-					walker.each do |commit|
+					walker.sort_by { |c| c.author[:time] }.reverse_each do |commit|
 						t = commit.author[:time]
 						Renames.extract_commit_renames(commit, true)
 						commits << commit if commit.parents.size == 1
@@ -76,12 +75,11 @@ module Diggit
 					t_0 = r_0.author[:time]
 
 					walker = Rugged::Walker.new(repo)
-					walker.sorting(Rugged::SORT_DATE | Rugged::SORT_REVERSE)
 					walker.push(r_last)
 					t_next_month = t_0 + MONTH_SECONDS
 					month_num = 1
 					commits = []
-					walker.each do |commit|
+					walker.sort_by { |c| c.author[:time] }.each do |commit|
 						t = commit.author[:time]
 						next if t < t_0
 						Renames.extract_commit_renames(commit, false)
