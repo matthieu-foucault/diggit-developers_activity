@@ -37,13 +37,12 @@ module Diggit
 					STDOUT.flush
 					Renames.clear
 					r_0 = repo.lookup(src_opt[@source]["cloc-commit-id"])
-					t_first = repo.lookup(src_opt[@source]["R_first"]).author[:time]
-
+					r_first = repo.lookup(src_opt[@source]["R_first"])
+					t_first = r_first.author[:time]
 					t_0 = r_0.author[:time]
 
 					walker = Rugged::Walker.new(repo)
-					walker.push(r_0)
-
+					walker.push_range("#{r_first.oid}..#{r_0.oid}")
 					t_previous_month = t_0 - MONTH_SECONDS
 					month_num = 1
 					commits = []
@@ -75,7 +74,7 @@ module Diggit
 					t_0 = r_0.author[:time]
 
 					walker = Rugged::Walker.new(repo)
-					walker.push(r_last)
+					walker.push_range("#{r_0.oid}..#{r_last.oid}")
 					t_next_month = t_0 + MONTH_SECONDS
 					month_num = 1
 					commits = []

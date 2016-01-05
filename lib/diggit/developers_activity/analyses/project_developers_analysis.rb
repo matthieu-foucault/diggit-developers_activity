@@ -13,19 +13,17 @@ module Diggit
 				def run
 					super
 					puts('Extracting project-level activity')
+
 					r_last = repo.lookup(src_opt[@source]["R_last"])
-					r_first_time = repo.lookup(src_opt[@source]["R_first"]).author[:time]
+					r_first = repo.lookup(src_opt[@source]["R_first"])
 
 					walker = Rugged::Walker.new(repo)
-					walker.push(r_last)
-
+					walker.push_range("#{r_first.oid}..#{r_last.oid}")
 					devs = []
-					walker.sort_by { |c| c.author[:time] }.reverse_each do |commit|
+					walker.each do |commit|
 						t = commit.author[:time]
 						author = Authors.get_author(commit)
 						devs << { project: @source.url, author: author, time: t }
-
-						break if t < r_first_time
 					end
 
 					db.insert(COL, devs)
