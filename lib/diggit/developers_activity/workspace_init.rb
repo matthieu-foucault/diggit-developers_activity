@@ -17,8 +17,6 @@ module Diggit
 			DGIT_FOLDER = '.dgit'
 
 			def init
-				link_analyses_folder
-				link_joins_folder
 				Dig.init_dir('.')
 				Dig.init('.')
 				Dig.it.config.add_analysis('cloc_per_file')
@@ -36,20 +34,6 @@ module Diggit
 
 				FileUtils.cp(File.join(dataset_dir, OPTIONS_FILE), DGIT_FOLDER)
 				FileUtils.cp(File.join(dataset_dir, SOURCES_OPTIONS_FILE), DGIT_FOLDER)
-			end
-
-			def link_analyses_folder
-				analyses_dir = File.expand_path('analyses', File.dirname(__FILE__))
-				home = File.join(Dir.home, DGIT_FOLDER, 'plugins', 'analysis')
-				FileUtils.mkdir_p(home)
-				FileUtils.ln_sf(analyses_dir, File.join(home, 'developers_activity'))
-			end
-
-			def link_joins_folder
-				analyses_dir = File.expand_path('joins', File.dirname(__FILE__))
-				home = File.join(Dir.home, DGIT_FOLDER, 'plugins', 'join')
-				FileUtils.mkdir_p(home)
-				FileUtils.ln_sf(analyses_dir, File.join(home, 'developers_activity'))
 			end
 		end
 	end

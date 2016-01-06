@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+require 'fileutils'
+
+DGIT_FOLDER = '.dgit'
+
+puts 'Creating symlinks to analyses and joins'
+analyses_dir = File.expand_path('../lib/diggit/developers_activity/analyses', File.dirname(__FILE__))
+home = File.join(Dir.home, DGIT_FOLDER, 'plugins', 'analysis')
+FileUtils.mkdir_p(home)
+FileUtils.rm(File.join(home, 'developers_activity'))
+FileUtils.ln_sf(analyses_dir, File.join(home, 'developers_activity'))
+
+joins_dir = File.expand_path('../lib/diggit/developers_activity/joins', File.dirname(__FILE__))
+home = File.join(Dir.home, DGIT_FOLDER, 'plugins', 'join')
+FileUtils.mkdir_p(home)
+FileUtils.rm(File.join(home, 'developers_activity'))
+FileUtils.ln_sf(joins_dir, File.join(home, 'developers_activity'))
+puts 'Done'

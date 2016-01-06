@@ -1,0 +1,30 @@
+PATH
+  remote: .
+  specs:
+    diggit-developers_activity (1.0.3)
+      diggit (~> 2.0)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    diggit (2.1.0)
+      formatador (~> 0.2)
+      gli (~> 2.13)
+      oj (~> 2.10)
+      rugged (~> 0.21)
+    formatador (0.2.5)
+    gli (2.13.4)
+    oj (2.14.3)
+    rake (10.4.2)
+    rugged (0.23.3)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  bundler (~> 1.7)
+  diggit-developers_activity!
+  rake (~> 10.0)
+
+BUNDLED WITH
+   1.11.2
