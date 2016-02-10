@@ -14,11 +14,17 @@ module Diggit
 					super
 					puts('Extracting project-level activity')
 
-					r_last = repo.lookup(src_opt[@source]["R_last"])
-					r_first = repo.lookup(src_opt[@source]["R_first"])
+					unless src_opt[@source].nil?
+						r_last = repo.lookup(src_opt[@source]["R_last"])
+						r_first = repo.lookup(src_opt[@source]["R_first"])
+					end
 
 					walker = Rugged::Walker.new(repo)
-					walker.push_range("#{r_first.oid}..#{r_last.oid}")
+					if src_opt[@source].nil?
+						walker.push(repo.head.target.oid)
+					else
+						walker.push_range("#{r_first.oid}..#{r_last.oid}")
+					end
 					devs = []
 					walker.each do |commit|
 						t = commit.author[:time]

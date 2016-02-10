@@ -19,19 +19,18 @@ module Diggit
 				end
 
 				def load_options
-					@releases = src_opt[@source]["releases"]
 					@all_releases = false
 					@all_releases = @options["all_releases"] if @options.key? "all_releases"
-
-					Authors.read_options(src_opt[@source])
-
-					source_options = src_opt[@source]
 					if @options.key? 'alternative_modules'
 						source_options['modules'] = Oj.load_file(@options['alternative_modules'])[@source.url]['modules']
 					end
-					Modules.read_options(@source, source_options, db.client)
-
 					@modules_metrics = @options.key?("modules_metrics") ? @options["modules_metrics"] : true
+
+					return if src_opt[@source].nil?
+					@releases = src_opt[@source]["releases"]
+					Authors.read_options(src_opt[@source])
+					source_options = src_opt[@source]
+					Modules.read_options(@source, source_options, db.client)
 				end
 			end
 		end
